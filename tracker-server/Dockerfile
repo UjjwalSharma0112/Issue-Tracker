@@ -2,9 +2,7 @@ FROM node:18.19.1
 
 WORKDIR /user/src/app
 
-COPY package.json package.json
-
-COPY package-lock.json package-lock.json
+COPY package.json package-lock.json ./
 
 RUN  npm install
 

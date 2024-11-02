@@ -128,7 +128,7 @@ router.post('/add',Authorization,async(req,res)=>{
 
    try {
        const response = await axios.get(githubApiUrl);
-       
+   // dont know if this is best practice or should i just ping it ?    
    } catch (err) {
        if (err.response && err.response.status === 404) {
            return res.status(404).json({ message: "Repo not found" });
@@ -139,7 +139,8 @@ router.post('/add',Authorization,async(req,res)=>{
    const token=req.cookies.token;
    const username=jwt.decode(token);
    const user= await User.findOne({'username':username});
-   user.repos.push(new_repo);
+   
+   user.repos.push(githubApiUrl);
    try{
       await user.save();
       res.json({message:"Repo added scucesfully"});
