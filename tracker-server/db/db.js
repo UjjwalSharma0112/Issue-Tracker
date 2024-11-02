@@ -1,8 +1,7 @@
 import { mongoose,Schema} from 'mongoose';
-
-mongoose.connect("mongodb://localhost:27017/Users").
-catch(error=>console.log(error));
-
+const MONGO_URL=process.env.MONGO_URL || "mongodb://localhost:27017/Users";
+mongoose.connect(MONGO_URL).catch(error=>console.log(error));
+console.log("Db Connected Succesfully");
 const userSchema=new Schema({
     username: {
         type: String,

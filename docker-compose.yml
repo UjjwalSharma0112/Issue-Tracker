@@ -1,0 +1,28 @@
+services:
+        db:
+          image: mongo
+          container_name: db
+          ports:
+              - "27017:27017"
+          networks:
+              - tracker-net
+          volumes:
+          - db_data:/data/db
+
+        backend:
+          build: ./tracker-server
+          container_name: tracker-server
+          depends_on:
+          - db
+          ports:
+          - "3000:3000"
+          environment:
+           MONGO_URL: "mongodb://db:27017/users"
+          networks:
+          - tracker-net 
+volumes:
+   db_data:
+     driver: local
+networks:
+ tracker-net:
+     driver: bridge 

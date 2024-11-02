@@ -17,10 +17,13 @@ const router=express.Router();
 TODO 
 1.Delete Repo
 2.Delete User
-3.Logout
+3.Logouts
 */
 router.use(cookieParser());
+router.get('/',Authorization,(req,res)=>{
 
+   return res.status(200).json({message:"Welcome User"});
+})
 
 router.post('/signup',async(req,res)=>{
    
@@ -41,7 +44,7 @@ router.post('/signup',async(req,res)=>{
       try{
          await user.save();
          res.cookie("token",user_id,{httpOnly:true,secure:true});
-         res.json({message:"Written successful"}) //signing cookies
+         res.status(200).json({message:"Written successful"}) //signing cookies
        }catch(err){
         console.error(err);
         return res.status(500).json({message:"Internal Server Error"});
@@ -109,6 +112,7 @@ router.post('/add',Authorization,async(req,res)=>{
        const pathParts = url.pathname.split('/').filter(Boolean);
        if (pathParts.length >= 1) {
            owner = pathParts[0]; 
+           repo=pathParts[1];
            if (repo.endsWith('.git')) {
                repo = repo.slice(0, -4);
            }
@@ -124,7 +128,7 @@ router.post('/add',Authorization,async(req,res)=>{
 
    try {
        const response = await axios.get(githubApiUrl);
-       console.log("Repo exists:", response.data);
+       
    } catch (err) {
        if (err.response && err.response.status === 404) {
            return res.status(404).json({ message: "Repo not found" });

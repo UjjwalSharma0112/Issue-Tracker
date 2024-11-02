@@ -1,5 +1,5 @@
 
-export default function InputBar({field,setData}){
-    console.log(field)
-   return <input type="text" placeholder={field} onChange={(e)=>setData(e.target.value)}></input>
+export default function InputBar({field,onChange}){
+
+   return <input type="text" placeholder={field} onChange={(e)=>onChange(e.target.value)}></input>
 }

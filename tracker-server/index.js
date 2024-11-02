@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import  userRouter  from './routes/user.js';
 import cors from 'cors';
 import testRouter from './routes/test.js'
-import cookieParser from 'cookie-parser';
+
 
 dotenv.config();
 
@@ -16,10 +16,10 @@ app.use(cors({
     credentials:true
 }));
 
-app.use('/users',userRouter)
-app.use('/test',testRouter)
+app.use('/users',userRouter);
+app.use('/test',testRouter);
 
-const PORT=process.env.PORT||3000
+const PORT=process.env.PORT||3000;
 app.listen(PORT,()=>{
 
     console.log(`Server Running on port ${PORT}`)

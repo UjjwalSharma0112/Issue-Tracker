@@ -1,3 +1,3 @@
 export default function Button({field,onClick}){
-    return <button onClick={onClick}>{field}</button>
+    return <button className="text-white bg-zinc-300"onClick={onClick}>{field}</button>
 }
