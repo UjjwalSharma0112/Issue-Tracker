@@ -18,6 +18,8 @@ services:
           - "3000:3000"
           environment:
            MONGO_URL: "mongodb://db:27017/users"
+           JWT_SECRET_PASSWORD: ${JWT_SECRET_PASSWORD}  #make a .env file for the JWT password (best practices wooo hoo)
+           PORT: 3000
           networks:
           - tracker-net 
 volumes:

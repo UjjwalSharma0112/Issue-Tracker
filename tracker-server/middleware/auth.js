@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 export default function Authorization(req,res,next){
 const userId=req.cookies.token;
+
 if(!userId){
    return res.status(401).json({message:"Unauthorized access"})
 }
