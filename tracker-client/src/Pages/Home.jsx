@@ -55,6 +55,7 @@ export default function Home() {
                 <InputBar field="Repo Url" onChange={setRepos}/>
                 {<p className='text-red-500'>{error}</p>}
             </div>
+            <Button field="GEt repos " onClick={getRepos}></Button>
             
             <Button field="Add Repo" onClick={postRepos} />
         </div>

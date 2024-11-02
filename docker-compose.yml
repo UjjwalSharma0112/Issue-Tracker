@@ -21,8 +21,10 @@ services:
            JWT_SECRET_PASSWORD: ${JWT_SECRET_PASSWORD}  #make a .env file for the JWT password (best practices wooo hoo)
            PORT: 3000
           networks:
-          - tracker-net 
+          - tracker-net
+        
 volumes:
+  
    db_data:
      driver: local
 networks:
