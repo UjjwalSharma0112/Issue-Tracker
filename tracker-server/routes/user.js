@@ -125,7 +125,7 @@ router.post('/add',Authorization,async(req,res)=>{
 
    
    const githubApiUrl = `https://api.github.com/repos/${owner}/${repo}`; // Replace with the correct owner and repo
-
+   const githubUrl=`https://github.com/repos/${owner}/${repo}`;
    try {
        const response = await axios.get(githubApiUrl);
    // dont know if this is best practice or should i just ping it ?    
@@ -139,13 +139,21 @@ router.post('/add',Authorization,async(req,res)=>{
    const token=req.cookies.token;
    const username=jwt.decode(token);
    const user= await User.findOne({'username':username});
-   
-   user.repos.push(githubApiUrl);
+   var checkRepoExist=false;
+    user.repos.filter((repo)=>{
+      if(repo.githubUrl===githubUrl)
+         checkRepoExist=true;
+   })
+   if(checkRepoExist){
+      console.log("REpo exist")
+      return res.json({message:"Repo Already Exist"});
+   }
+   user.repos.push({githubUrl,githubApiUrl});
    try{
       await user.save();
-      res.json({message:"Repo added scucesfully"});
+      return res.json({message:"Repo added scucesfully"});
    }catch(err){
-      res.status(404).json({message:"Cannot write"});
+      return res.status(404).json({message:"Cannot write"});
    }
 
 })
