@@ -19,7 +19,10 @@ const userSchema=new Schema({
         type:String,
         select:false //Hides from queries
     },
-    repos:[String]
+    repos:[{
+        githubUrl:String,
+        githubApiUrl:String
+    }]
     
 })
 
