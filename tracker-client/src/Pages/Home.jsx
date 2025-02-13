@@ -72,8 +72,7 @@ export default function Home() {
              
            
               <Button field="Add Repo" onClick={postRepos} />
-             </div>
-             <div className='w-full mt-4'>
+              <div className='w-full mt-4'>
                     <h3 className="text-xl text-white font-semibold mb-2">Repositories:</h3>
                     <ul className='space-y-2'>
                         {api.map((repo, index) => (
@@ -83,6 +82,8 @@ export default function Home() {
                         ))}
                     </ul>
                 </div>
+             </div>
+
 
         </div>
        

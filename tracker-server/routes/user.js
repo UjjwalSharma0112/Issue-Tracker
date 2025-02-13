@@ -3,9 +3,10 @@ import { User } from '../db/db.js';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import { ReposSchema, UserLogin, UserSchema } from '../middleware/schema.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import Authorization from '../middleware/auth.js';
 import axios from 'axios';
+import { apiCallForIssues } from './temp.js';
 const router=express.Router();
 
 /*notes:
@@ -87,7 +88,30 @@ router.post('/signin',async(req,res)=>{
       return res.status(400).json({message:"Already logged in"})
    }
 })
-
+router.post('/reposIssues', Authorization, async (req, res) => {
+   try {
+     const token = req.cookies.token;
+     const username = jwt.decode(token);
+     const user = await User.findOne({ username });
+     if (!user) {
+       return res.status(404).json({ message: 'User not found' });
+     }
+     user.repos.forEach(repo => {
+       if (!repo.issues) {
+         repo.issues = [];
+       }
+       repo.issues.push(req.body.issues);
+     });
+     
+     await user.save();
+     console.log(user.repos[0].issues);
+     res.json({ message: "Issue added successfully" });
+   } catch (error) {
+     console.error(error);
+     res.status(500).json({ message: 'Server error' });
+   }
+ });
+ 
 
 router.get('/repos',Authorization,async(req,res)=>{
    //Send Out The repos that you are following
@@ -123,18 +147,10 @@ router.post('/add',Authorization,async(req,res)=>{
        return res.status(400).json({ message: "Invalid GitHub repository URL", error: err.message });
    }
 
-   
+
    const githubApiUrl = `https://api.github.com/repos/${owner}/${repo}`; // Replace with the correct owner and repo
    const githubUrl=`https://github.com/repos/${owner}/${repo}`;
-   try {
-       const response = await axios.get(githubApiUrl);
-   // dont know if this is best practice or should i just ping it ?    
-   } catch (err) {
-       if (err.response && err.response.status === 404) {
-           return res.status(404).json({ message: "Repo not found" });
-       }
-       return res.status(500).json({ message: "Error checking repo", error: err.message });
-   }
+   let issues=await apiCallForIssues(githubApiUrl);
    
    const token=req.cookies.token;
    const username=jwt.decode(token);
@@ -145,10 +161,11 @@ router.post('/add',Authorization,async(req,res)=>{
          checkRepoExist=true;
    })
    if(checkRepoExist){
-      console.log("REpo exist")
+      console.log("Repo exist")
       return res.json({message:"Repo Already Exist"});
    }
-   user.repos.push({githubUrl,githubApiUrl});
+   user.repos.push({githubUrl,githubApiUrl,issues});
+   
    try{
       await user.save();
       return res.json({message:"Repo added scucesfully"});
